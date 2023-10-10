@@ -19,7 +19,6 @@ public:
 
 class LianShiBiao {
 public:
-	virtual Statues InitList()=0;
 	virtual Statues DestoryList() = 0;
 	virtual Statues ClearList() = 0;
 	virtual Statues InsertNode(Node* Node,const int i) = 0;
@@ -38,13 +37,16 @@ public:
 
 class DangXiangBiao :public LianShiBiao {
 public:
-	DangXiangBiao() { InitList(); }
-	Statues InitList() override;
+	DangXiangBiao() {
+		head = MakeNode(0);
+		tail = current = head;
+		length = 0;
+
+	}
 	Statues DestoryList() override;
 	Statues ClearList() override;
 	Statues InsertNode(Node* Node, const int i) override;
 	Statues DeleteNode(int i) override;
-
 	Statues SetCurrentNode(const int i)override;
 	Node& GetCurrentNode() const ;
 	int GetLength() const override;
@@ -58,7 +60,6 @@ private:
 	Node* MakeNode(const NodeType data)override;
 	Statues DestoryNode(Node*) override;
 };
-
 Node* DangXiangBiao::MakeNode(const NodeType data) {
 	try {
 		Node* pt = new Node(data);
@@ -72,12 +73,6 @@ Node* DangXiangBiao::MakeNode(const NodeType data) {
 Statues DangXiangBiao::DestoryNode(Node* pt) {
 	pt->next = 0;
 	delete pt;
-	return ok;
-}
-Statues DangXiangBiao::InitList() {
-	head = MakeNode(0);
-	tail = current = head;
-	length = 0;
 	return ok;
 }
 Statues DangXiangBiao::ClearList() {
@@ -94,13 +89,8 @@ Statues DangXiangBiao::ClearList() {
 	return ok;
 }
 Statues DangXiangBiao::DestoryList() {
-	Node* p = head;
-	while (p) {
-		Node* q = p;
-		p = p->next;
-		delete q;
-		q = 0;
-	}
+	ClearList();
+	delete head;
 	head = current = tail = 0;
 	length = 0;
 	return ok;
@@ -113,6 +103,9 @@ Statues DangXiangBiao::InsertNode(Node* ChaRuZhi,const int i) {
 	else if (i == 1) {
 		Node* pt = head;
 		head = ChaRuZhi;
+		if (length == 0) {
+			tail = ChaRuZhi;
+		}
 		ChaRuZhi->next = pt;
 		length++;
 		return ok;
@@ -188,6 +181,6 @@ int DangXiangBiao::GetLength() const { return length; }
 Node& DangXiangBiao::GetHeadNode() const { return *head; }
 Node& DangXiangBiao::GetLastNode() const { return *tail; }
 Statues DangXiangBiao::Isempty() {
-	if (length = 0)return 1;
+	if (length == 0)return 1;
 	else return 0;
 }
